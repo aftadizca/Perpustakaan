@@ -1206,7 +1206,19 @@ namespace Perputakaan
 
         private void buttonPrintTR_Click(object sender, EventArgs e)
         {
+            List<MyItem> data = new List<MyItem>();
+            for(int i = 0; i<dataGridViewPinjam.Rows.Count; i++)
+            {
+                data.Add(new MyItem() { ID = dataGridViewPinjam.Rows[i].Cells[0].Value.ToString(), JUDUL = dataGridViewPinjam.Rows[i].Cells[1].Value.ToString() });
+            }
             
+            TransaksiPrint d = new TransaksiPrint(idTR.Text,tanggalPinjamStart.Value.Date.ToString().Replace("00:00:00",""),tanggalPinjamEnd.Value.Date.ToString().Replace("00:00:00", ""), data);
+            d.ShowDialog();
+        }
+
+        private void home_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

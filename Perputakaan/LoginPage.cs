@@ -53,7 +53,7 @@ namespace Perputakaan
                 if (result.Count > 0)
                 {
                     home _home = new home();
-                    _home.ShowDialog();
+                    _home.Show();
                     this.Hide();
                 }
                 else
