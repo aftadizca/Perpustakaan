@@ -1,0 +1,300 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="perpustakaanModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="buku">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="gambar" Type="text" Nullable="false" />
+          <Property Name="judul" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="penerbit" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="pengarang" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="tahun_terbit" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="tahun_pengadaan" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="jumlah" Type="int" Nullable="false" />
+          <Property Name="dipinjam" Type="int" Nullable="false" />
+          <Property Name="hilang" Type="int" Nullable="false" />
+          <Property Name="rusak" Type="int" Nullable="false" />
+          <Property Name="lokasi" Type="varchar" MaxLength="45" Nullable="false" />
+        </EntityType>
+        <EntityType Name="login">
+          <Key>
+            <PropertyRef Name="username" />
+          </Key>
+          <Property Name="username" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="pinjam">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="buku_id" />
+            <PropertyRef Name="user_id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="transaksi_id" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="buku_id" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="user_id" Type="varchar" MaxLength="45" Nullable="false" />
+        </EntityType>
+        <EntityType Name="transaksi">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="tanggal_pinjam" Type="datetime" Precision="0" />
+          <Property Name="tanggal_kembali" Type="datetime" Precision="0" />
+          <Property Name="tanggal_kembali_real" Type="datetime" Precision="0" />
+          <Property Name="terlambat" Type="bigint" Nullable="false" />
+          <Property Name="denda" Type="bigint" />
+          <Property Name="status" Type="varchar" MaxLength="45" Nullable="false" />
+        </EntityType>
+        <EntityType Name="user">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="nama" Type="varchar" MaxLength="45" />
+          <Property Name="alamat" Type="longtext" />
+          <Property Name="tanggal_lahir" Type="date" />
+          <Property Name="telp" Type="varchar" MaxLength="45" />
+          <Property Name="tanggal_daftar" Type="datetime" Precision="0" Nullable="false" />
+        </EntityType>
+        <Association Name="fk_pinjam_buku">
+          <End Role="buku" Type="Self.buku" Multiplicity="1" />
+          <End Role="pinjam" Type="Self.pinjam" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="buku">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="pinjam">
+              <PropertyRef Name="buku_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_pinjam_user1">
+          <End Role="user" Type="Self.user" Multiplicity="1" />
+          <End Role="pinjam" Type="Self.pinjam" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="pinjam">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="perpustakaanModelStoreContainer">
+          <EntitySet Name="buku" EntityType="Self.buku" Schema="perpustakaan" store:Type="Tables" />
+          <EntitySet Name="login" EntityType="Self.login" Schema="perpustakaan" store:Type="Tables" />
+          <EntitySet Name="pinjam" EntityType="Self.pinjam" Schema="perpustakaan" store:Type="Tables" />
+          <EntitySet Name="transaksi" EntityType="Self.transaksi" Schema="perpustakaan" store:Type="Tables" />
+          <EntitySet Name="user" EntityType="Self.user" Schema="perpustakaan" store:Type="Tables" />
+          <AssociationSet Name="fk_pinjam_buku" Association="Self.fk_pinjam_buku">
+            <End Role="buku" EntitySet="buku" />
+            <End Role="pinjam" EntitySet="pinjam" />
+          </AssociationSet>
+          <AssociationSet Name="fk_pinjam_user1" Association="Self.fk_pinjam_user1">
+            <End Role="user" EntitySet="user" />
+            <End Role="pinjam" EntitySet="pinjam" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="perpustakaanModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="perpustakaanEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="bukus" EntityType="perpustakaanModel.buku" />
+          <EntitySet Name="pinjams" EntityType="perpustakaanModel.pinjam" />
+          <EntitySet Name="transaksis" EntityType="perpustakaanModel.transaksi" />
+          <EntitySet Name="users" EntityType="perpustakaanModel.user" />
+          <AssociationSet Name="fk_pinjam_buku" Association="perpustakaanModel.fk_pinjam_buku">
+            <End Role="buku" EntitySet="bukus" />
+            <End Role="pinjam" EntitySet="pinjams" />
+          </AssociationSet>
+          <AssociationSet Name="fk_pinjam_user1" Association="perpustakaanModel.fk_pinjam_user1">
+            <End Role="user" EntitySet="users" />
+            <End Role="pinjam" EntitySet="pinjams" />
+          </AssociationSet>
+          <EntitySet Name="logins" EntityType="perpustakaanModel.login" />
+        </EntityContainer>
+        <EntityType Name="buku">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="gambar" Type="String" Nullable="false" MaxLength="65535" FixedLength="false" Unicode="false" />
+          <Property Name="judul" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="penerbit" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="pengarang" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="tahun_terbit" Type="DateTime" Nullable="false" />
+          <Property Name="tahun_pengadaan" Type="DateTime" Nullable="false" />
+          <Property Name="jumlah" Type="Int32" Nullable="false" />
+          <Property Name="dipinjam" Type="Int32" Nullable="false" />
+          <Property Name="hilang" Type="Int32" Nullable="false" />
+          <Property Name="rusak" Type="Int32" Nullable="false" />
+          <Property Name="lokasi" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="pinjams" Relationship="perpustakaanModel.fk_pinjam_buku" FromRole="buku" ToRole="pinjam" />
+        </EntityType>
+        <EntityType Name="pinjam">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="buku_id" />
+            <PropertyRef Name="user_id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="transaksi_id" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="buku_id" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="user_id" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="buku" Relationship="perpustakaanModel.fk_pinjam_buku" FromRole="pinjam" ToRole="buku" />
+          <NavigationProperty Name="user" Relationship="perpustakaanModel.fk_pinjam_user1" FromRole="pinjam" ToRole="user" />
+        </EntityType>
+        <EntityType Name="transaksi">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="tanggal_pinjam" Type="DateTime" />
+          <Property Name="tanggal_kembali" Type="DateTime" />
+          <Property Name="tanggal_kembali_real" Type="DateTime" />
+          <Property Name="terlambat" Type="Int64" Nullable="false" />
+          <Property Name="denda" Type="Int64" />
+          <Property Name="status" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="user">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="nama" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="alamat" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
+          <Property Name="tanggal_lahir" Type="DateTime" />
+          <Property Name="telp" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="tanggal_daftar" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="pinjams" Relationship="perpustakaanModel.fk_pinjam_user1" FromRole="user" ToRole="pinjam" />
+        </EntityType>
+        <Association Name="fk_pinjam_buku">
+          <End Type="perpustakaanModel.buku" Role="buku" Multiplicity="1" />
+          <End Type="perpustakaanModel.pinjam" Role="pinjam" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="buku">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="pinjam">
+              <PropertyRef Name="buku_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_pinjam_user1">
+          <End Type="perpustakaanModel.user" Role="user" Multiplicity="1" />
+          <End Type="perpustakaanModel.pinjam" Role="pinjam" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="pinjam">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="login">
+          <Key>
+            <PropertyRef Name="username" />
+          </Key>
+          <Property Name="username" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="password" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+        </EntityType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="perpustakaanModelStoreContainer" CdmEntityContainer="perpustakaanEntities">
+          <EntitySetMapping Name="bukus">
+            <EntityTypeMapping TypeName="perpustakaanModel.buku">
+              <MappingFragment StoreEntitySet="buku">
+                <ScalarProperty Name="lokasi" ColumnName="lokasi" />
+                <ScalarProperty Name="rusak" ColumnName="rusak" />
+                <ScalarProperty Name="hilang" ColumnName="hilang" />
+                <ScalarProperty Name="dipinjam" ColumnName="dipinjam" />
+                <ScalarProperty Name="jumlah" ColumnName="jumlah" />
+                <ScalarProperty Name="tahun_pengadaan" ColumnName="tahun_pengadaan" />
+                <ScalarProperty Name="tahun_terbit" ColumnName="tahun_terbit" />
+                <ScalarProperty Name="pengarang" ColumnName="pengarang" />
+                <ScalarProperty Name="penerbit" ColumnName="penerbit" />
+                <ScalarProperty Name="judul" ColumnName="judul" />
+                <ScalarProperty Name="gambar" ColumnName="gambar" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="pinjams">
+            <EntityTypeMapping TypeName="perpustakaanModel.pinjam">
+              <MappingFragment StoreEntitySet="pinjam">
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="buku_id" ColumnName="buku_id" />
+                <ScalarProperty Name="transaksi_id" ColumnName="transaksi_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="transaksis">
+            <EntityTypeMapping TypeName="perpustakaanModel.transaksi">
+              <MappingFragment StoreEntitySet="transaksi">
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="denda" ColumnName="denda" />
+                <ScalarProperty Name="terlambat" ColumnName="terlambat" />
+                <ScalarProperty Name="tanggal_kembali_real" ColumnName="tanggal_kembali_real" />
+                <ScalarProperty Name="tanggal_kembali" ColumnName="tanggal_kembali" />
+                <ScalarProperty Name="tanggal_pinjam" ColumnName="tanggal_pinjam" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="users">
+            <EntityTypeMapping TypeName="perpustakaanModel.user">
+              <MappingFragment StoreEntitySet="user">
+                <ScalarProperty Name="tanggal_daftar" ColumnName="tanggal_daftar" />
+                <ScalarProperty Name="telp" ColumnName="telp" />
+                <ScalarProperty Name="tanggal_lahir" ColumnName="tanggal_lahir" />
+                <ScalarProperty Name="alamat" ColumnName="alamat" />
+                <ScalarProperty Name="nama" ColumnName="nama" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="logins">
+            <EntityTypeMapping TypeName="perpustakaanModel.login">
+              <MappingFragment StoreEntitySet="login">
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="username" ColumnName="username" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
