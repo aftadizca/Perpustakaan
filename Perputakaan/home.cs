@@ -13,8 +13,11 @@ namespace Perputakaan
     public partial class home : Form
     {
 
-        #region **** KELOLA BUKU FUNCTION *****
+        int hilangSave = 0;
+        int rusakSave = 0;
 
+        #region **** KELOLA BUKU FUNCTION *****
+        //Membuat id buku
         public string generateIdBuku()
         {
             using (perpustakaanEntities db = new perpustakaanEntities())
@@ -34,7 +37,7 @@ namespace Perputakaan
 
             }
         }
-
+        //enable / disable edit di detail buku
         public void enableDetailBuku(bool _bool)
         {
             if (_bool == true)
@@ -44,8 +47,10 @@ namespace Perputakaan
                 pengarangTB.ReadOnly = false;
                 tahunTerbit.Enabled = true;
                 tanggalPengadaan.Enabled = true;
-                rusakTB.ReadOnly = false;
-                hilangTB.ReadOnly = false;
+                hilangTB.ReadOnly = true;
+                hilangTB.Increment = 1;
+                rusakTB.ReadOnly = true;
+                rusakTB.Increment = 1;
                 jmlBukuTB.ReadOnly = false;
                 lokasiTB.ReadOnly = false;
             }
@@ -56,14 +61,16 @@ namespace Perputakaan
                 pengarangTB.ReadOnly = true;
                 tahunTerbit.Enabled = false;
                 tanggalPengadaan.Enabled = false;
-                rusakTB.ReadOnly = true;
-                hilangTB.ReadOnly = true;
+                hilangTB.ReadOnly = false;
+                hilangTB.Increment = 0;
+                rusakTB.ReadOnly = false;
+                rusakTB.Increment = 0;
                 jmlBukuTB.ReadOnly = true;
                 lokasiTB.ReadOnly = true;
             }
 
         }
-
+        //mengecek input detail buku, harus terisi semua
         public bool cekDetailBuku()
         {
             if (judulTB.Text == "" ||
@@ -81,7 +88,7 @@ namespace Perputakaan
                 return true;
             }
         }
-
+        //mengosongkan input detail buku
         public void clearInputDetailBuku()
         {
             picture.ImageLocation = "";
@@ -90,8 +97,8 @@ namespace Perputakaan
             penerbitTB.Text = null;
             pengarangTB.Text = null;
             jmlBukuTB.Text = null;
-            rusakTB.Text = "0";
             hilangTB.Text = "0";
+            rusakTB.Text = "0";
             dipinjamTB.Text = "0";
             lokasiTB.Text = null;
         }
@@ -113,9 +120,13 @@ namespace Perputakaan
                         pengarangTB.Text = result.pengarang;
                         tahunTerbit.Value = result.tahun_terbit;
                         tanggalPengadaan.Value = result.tahun_pengadaan;
-                        jmlBukuTB.Text = result.jumlah.ToString();
-                        rusakTB.Text = result.rusak.ToString();
+
+                        jmlBukuTB.Text = (result.jumlah - result.dipinjam).ToString();
                         hilangTB.Text = result.hilang.ToString();
+                        hilangSave = result.hilang;
+                        rusakTB.Minimum = result.rusak;
+                        rusakTB.Text = result.rusak.ToString();
+                        rusakSave = result.rusak;
                         lokasiTB.Text = result.lokasi;
                         dipinjamTB.Text = result.dipinjam.ToString();
                     }
@@ -433,7 +444,6 @@ namespace Perputakaan
                 {
                     if (comboBoxFilterTR.Text == "SEMUA")
                     {
-
                         var result = from trans in db.transaksis
                                      from user in db.users
                                      from pinjam in db.pinjams
@@ -459,7 +469,7 @@ namespace Perputakaan
                                      select new { IdTrans = trans.id, IdPeminjam = user.id, NamaPeminjam = user.nama, TanggalPinjamStart = trans.tanggal_pinjam, TanggalPinjamEnd = trans.tanggal_kembali, TanggalKembali = trans.tanggal_kembali_real, Terlambat = trans.terlambat, Denda = trans.denda, Status = trans.status };
 
                         var list = result.Distinct().ToList();
-
+                        dataGridViewTR.Rows.Clear();
                         for (int i = 0; i < list.Count; i++)
                         {
                             Console.WriteLine(i);
@@ -467,6 +477,42 @@ namespace Perputakaan
                         }
                     }
 
+                }else if (searchTR.Text == "")
+                {
+                    if (comboBoxFilterTR.Text == "SEMUA")
+                    {
+                        var result = from trans in db.transaksis
+                                     from user in db.users
+                                     from pinjam in db.pinjams
+                                     where trans.id == pinjam.transaksi_id && user.id == pinjam.user_id
+                                     select new { IdTrans = trans.id, IdPeminjam = user.id, NamaPeminjam = user.nama, TanggalPinjamStart = trans.tanggal_pinjam, TanggalPinjamEnd = trans.tanggal_kembali, TanggalKembali = trans.tanggal_kembali_real, Terlambat = trans.terlambat, Denda = trans.denda, Status = trans.status };
+
+                        var list = result.Distinct().ToList();
+                        dataGridViewTR.Rows.Clear();
+
+                        for (int i = 0; i < list.Count; i++)
+                        {
+                            Console.WriteLine(i);
+                            dataGridViewTR.Rows.Add(list[i].IdTrans, list[i].NamaPeminjam, list[i].TanggalPinjamStart.Value.ToShortDateString(), list[i].Status);
+                        }
+
+                    }
+                    else
+                    {
+                        var result = from trans in db.transaksis
+                                     from user in db.users
+                                     from pinjam in db.pinjams
+                                     where trans.id == pinjam.transaksi_id && user.id == pinjam.user_id && trans.status == comboBoxFilterTR.Text
+                                     select new { IdTrans = trans.id, IdPeminjam = user.id, NamaPeminjam = user.nama, TanggalPinjamStart = trans.tanggal_pinjam, TanggalPinjamEnd = trans.tanggal_kembali, TanggalKembali = trans.tanggal_kembali_real, Terlambat = trans.terlambat, Denda = trans.denda, Status = trans.status };
+
+                        var list = result.Distinct().ToList();
+                        dataGridViewTR.Rows.Clear();
+                        for (int i = 0; i < list.Count; i++)
+                        {
+                            Console.WriteLine(i);
+                            dataGridViewTR.Rows.Add(list[i].IdTrans, list[i].NamaPeminjam, list[i].TanggalPinjamStart, list[i].Status);
+                        }
+                    }
                 }
                 else
                 {
@@ -543,6 +589,7 @@ namespace Perputakaan
             buttonSimpanTR.Enabled = false;
             loadDaftarTRFilter(searchTR.Text, comboBoxFilterTR.Text);
             loadInputDetailTR(0);
+
         }
 
 
@@ -556,8 +603,7 @@ namespace Perputakaan
                 buttonEditKelola.Text = "EDIT";
 
                 loadInputDetailBuku(dataGridViewBuku.CurrentRow.Index);
-
-                addPic.Visible = false;
+                
                 enableDetailBuku(false);
             }
             else if (buttonEditKelola.Text == "EDIT")
@@ -567,9 +613,12 @@ namespace Perputakaan
                     buttonTambahKelola.Enabled = false;
                     buttonSimpanKelola.Enabled = true;
                     buttonEditKelola.Text = "BATAL";
-
-                    addPic.Visible = true;
+                    
                     enableDetailBuku(true);
+
+                    var jml = int.Parse(jmlBukuTB.Text);
+                    hilangTB.Maximum = jml + (int)hilangTB.Value;
+                    rusakTB.Maximum = jml + (int)rusakTB.Value;
                 }
                 else
                 {
@@ -590,7 +639,11 @@ namespace Perputakaan
                 CariBuku.Enabled = false;
                 DaftarBuku.Enabled = false;
                 enableDetailBuku(true);
-                addPic.Visible = true;
+                rusakTB.Maximum = 0;
+                rusakTB.Value = 0;
+                hilangTB.Value = 0;
+                rusakTB.Increment = 0;
+                hilangTB.Increment = 0;
                 using (perpustakaanEntities db = new perpustakaanEntities())
                 {
                     idTB.Text = generateIdBuku();
@@ -605,19 +658,12 @@ namespace Perputakaan
                 CariBuku.Enabled = true;
                 DaftarBuku.Enabled = true;
                 enableDetailBuku(false);
-                addPic.Visible = false;
 
                 if (dataGridViewBuku.Rows.Count > 0)
                 {
                     loadInputDetailBuku(dataGridViewBuku.CurrentRow.Index);
                 }
             }
-        }
-
-        private void addPic_Click(object sender, EventArgs e)
-        {
-            openPicture.ShowDialog();
-            picture.ImageLocation = openPicture.FileName;
         }
 
         private void buttonSimpanKelola_Click(object sender, EventArgs e)
@@ -640,7 +686,7 @@ namespace Perputakaan
                             _buku.pengarang = pengarangTB.Text;
                             _buku.tahun_pengadaan = tanggalPengadaan.Value;
                             _buku.tahun_terbit = tahunTerbit.Value;
-                            _buku.jumlah = int.Parse(jmlBukuTB.Text);
+                            _buku.jumlah = int.Parse(jmlBukuTB.Text) + int.Parse(dipinjamTB.Text);
                             _buku.rusak = int.Parse(rusakTB.Text);
                             _buku.hilang = int.Parse(hilangTB.Text);
                             _buku.dipinjam = int.Parse(dipinjamTB.Text);
@@ -684,13 +730,14 @@ namespace Perputakaan
                             _buku.pengarang = pengarangTB.Text;
                             _buku.tahun_pengadaan = tanggalPengadaan.Value;
                             _buku.tahun_terbit = tahunTerbit.Value;
-                            _buku.jumlah = int.Parse(jmlBukuTB.Text);
+                            _buku.jumlah = int.Parse(jmlBukuTB.Text)+int.Parse(dipinjamTB.Text);
                             _buku.rusak = int.Parse(rusakTB.Text);
                             _buku.hilang = int.Parse(hilangTB.Text);
                             _buku.dipinjam = int.Parse(dipinjamTB.Text);
                             _buku.lokasi = lokasiTB.Text;
                             db.SaveChanges();
-                            loadDaftarBukuFilter(search.Text, filter.Text);
+                            loadInputDetailBuku(dataGridViewBuku.CurrentRow.Index);
+                            //loadDaftarBukuFilter(search.Text, filter.Text);
                             var dialog = MessageBox.Show(this, "Buku Berhasil Disimpan", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             if (dialog == DialogResult.OK)
                             {
@@ -1074,6 +1121,11 @@ namespace Perputakaan
                             db.transaksis.Add(tr);
                             db.SaveChanges();
 
+                            var idbuku = db.pinjams.Where(i => i.transaksi_id == idTR.Text);
+                            foreach( var i in idbuku){
+                                UpdateStok.pinjam(i.buku_id);
+                            }
+
                             var dialog = MessageBox.Show(this, "Transaksi Berhasil Dibuat." + Environment.NewLine + "Tambah Transaksi Lain?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                             if (dialog == DialogResult.No)
                             {
@@ -1088,6 +1140,9 @@ namespace Perputakaan
 
                                 idAnggotaTR.ReadOnly = true;
                                 loadDaftarTRFilter(searchTR.Text, comboBoxFilterTR.Text);
+                                dataGridViewTR.Sort(dataGridViewTR.Columns["dataGridViewTextBoxColumn1"], ListSortDirection.Ascending);
+                                dataGridViewTR.Rows[dataGridViewTR.Rows.Count - 1].Selected = true;
+                                loadInputDetailTR(dataGridViewTR.Rows.Count - 1);
                             }
                             else
                             {
@@ -1118,19 +1173,37 @@ namespace Perputakaan
                             var terlambat = (hari > 0) ? hari : 0;
                             var denda = terlambat * 2000;
 
-                            var _user = db.transaksis.First(i => i.id == idTR.Text);
+                            var trans = db.transaksis.First(i => i.id == idTR.Text);
 
-                            _user.tanggal_kembali_real = DateTime.Now;
-                            _user.terlambat = terlambat;
-                            _user.denda = denda;
+                            trans.tanggal_kembali_real = DateTime.Now;
+                            trans.terlambat = terlambat;
+                            trans.denda = denda;
+                            trans.status = "DIKEMBALIKAN";
 
                             db.SaveChanges();
 
+                            //hitung jumlah buku yg dipinjam
+                            var idbuku = db.pinjams.Where(i => i.transaksi_id == idTR.Text);
+                            foreach (var i in idbuku)
+                            {
+                                UpdateStok.kembali(i.buku_id);
+                            }
+                            var index = dataGridViewTR.CurrentRow.Index;
                             loadDaftarTRFilter(searchTR.Text,comboBoxFilterTR.Text);
+                            dataGridViewTR.Rows[index].Selected = true;
                             var dialog = MessageBox.Show(this, "Transaksi Pengembalian Berhasil Disimpan", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             if (dialog == DialogResult.OK)
                             {
-                                buttonKembaliTR.PerformClick();
+                                buttonPinjamTR.Enabled = true;
+                                buttonPrintTR.Enabled = true;
+                                buttonSimpanTR.Enabled = false;
+
+                                buttonKembaliTR.Text = "KEMBALI";
+
+                                cariTR.Enabled = true;
+                                daftarTR.Enabled = true;
+
+                                tanggalKembali.Visible = false;
                             }
                         }
                     }
@@ -1166,6 +1239,8 @@ namespace Perputakaan
                 buttonPinjamTR.Enabled = false;
                 buttonPrintTR.Enabled = false;
                 buttonSimpanTR.Enabled = true;
+
+                tanggalKembali.Value = DateTime.Now;
 
                 buttonKembaliTR.Text = "BATAL";
 
@@ -1216,9 +1291,67 @@ namespace Perputakaan
             d.ShowDialog();
         }
 
+
         private void home_FormClosed(object sender, FormClosedEventArgs e)
         {
             Application.Exit();
+        }
+
+        private void picture_DoubleClick(object sender, EventArgs e)
+        {
+            if(buttonEditKelola.Text == "BATAL" || buttonTambahKelola.Text == "BATAL")
+            {
+                openPicture.ShowDialog();
+                picture.ImageLocation = openPicture.FileName;
+            }
+        }
+
+        private void hilangTB_ValueChanged(object sender, EventArgs e)
+        {
+            if (buttonEditKelola.Text == "BATAL")
+            {
+                var jml = int.Parse(jmlBukuTB.Text);
+                if (hilangTB.Value > hilangSave && jml != 0)
+                {
+                    jml--;
+                }
+                else
+                {
+                    jml++;
+                }
+
+                jmlBukuTB.Text = jml.ToString();
+                hilangTB.Maximum = jml + (int)hilangTB.Value;
+                rusakTB.Maximum = jml + (int)rusakTB.Value;
+                hilangSave = (int)hilangTB.Value;
+            }
+        }
+
+        private void rusakTB_ValueChanged(object sender, EventArgs e)
+        {
+            if (buttonEditKelola.Text == "BATAL")
+            {
+                var jml = int.Parse(jmlBukuTB.Text);
+                if (rusakTB.Value > rusakSave && jml != 0)
+                {
+                    jml--;
+                }
+                else
+                {
+                    jml++;
+                }
+
+                jmlBukuTB.Text = jml.ToString();
+                hilangTB.Maximum = jml + (int)hilangTB.Value;
+                rusakTB.Maximum = jml + (int)rusakTB.Value;
+                rusakSave = (int)rusakTB.Value;
+            }
+            
+        }
+
+        private void label13_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -33,15 +33,14 @@
             this.buttonSimpanKelola = new System.Windows.Forms.Button();
             this.DetailBuku = new System.Windows.Forms.GroupBox();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.addPic = new System.Windows.Forms.Button();
+            this.hilangTB = new System.Windows.Forms.NumericUpDown();
+            this.rusakTB = new System.Windows.Forms.NumericUpDown();
             this.tanggalPengadaan = new System.Windows.Forms.DateTimePicker();
             this.tahunTerbit = new System.Windows.Forms.DateTimePicker();
             this.lokasiTB = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
-            this.hilangTB = new System.Windows.Forms.TextBox();
             this.dipinjamTB = new System.Windows.Forms.TextBox();
             this.jmlBukuTB = new System.Windows.Forms.TextBox();
-            this.rusakTB = new System.Windows.Forms.TextBox();
             this.pengarangTB = new System.Windows.Forms.TextBox();
             this.penerbitTB = new System.Windows.Forms.TextBox();
             this.judulTB = new System.Windows.Forms.TextBox();
@@ -145,6 +144,8 @@
             this.tabPage1.SuspendLayout();
             this.DetailBuku.SuspendLayout();
             this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.hilangTB)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rusakTB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picture)).BeginInit();
             this.DaftarBuku.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewBuku)).BeginInit();
@@ -230,15 +231,14 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.AutoScroll = true;
-            this.panel2.Controls.Add(this.addPic);
+            this.panel2.Controls.Add(this.hilangTB);
+            this.panel2.Controls.Add(this.rusakTB);
             this.panel2.Controls.Add(this.tanggalPengadaan);
             this.panel2.Controls.Add(this.tahunTerbit);
             this.panel2.Controls.Add(this.lokasiTB);
             this.panel2.Controls.Add(this.label14);
-            this.panel2.Controls.Add(this.hilangTB);
             this.panel2.Controls.Add(this.dipinjamTB);
             this.panel2.Controls.Add(this.jmlBukuTB);
-            this.panel2.Controls.Add(this.rusakTB);
             this.panel2.Controls.Add(this.pengarangTB);
             this.panel2.Controls.Add(this.penerbitTB);
             this.panel2.Controls.Add(this.judulTB);
@@ -260,20 +260,28 @@
             this.panel2.Size = new System.Drawing.Size(393, 385);
             this.panel2.TabIndex = 0;
             // 
-            // addPic
+            // hilangTB
             // 
-            this.addPic.BackColor = System.Drawing.Color.Gainsboro;
-            this.addPic.BackgroundImage = global::Perputakaan.Properties.Resources.AddImage_520px;
-            this.addPic.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.addPic.FlatAppearance.BorderSize = 0;
-            this.addPic.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.addPic.Location = new System.Drawing.Point(132, 168);
-            this.addPic.Name = "addPic";
-            this.addPic.Size = new System.Drawing.Size(31, 31);
-            this.addPic.TabIndex = 25;
-            this.addPic.UseVisualStyleBackColor = true;
-            this.addPic.Visible = false;
-            this.addPic.Click += new System.EventHandler(this.addPic_Click);
+            this.hilangTB.Increment = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.hilangTB.Location = new System.Drawing.Point(193, 485);
+            this.hilangTB.Name = "hilangTB";
+            this.hilangTB.ReadOnly = true;
+            this.hilangTB.Size = new System.Drawing.Size(171, 26);
+            this.hilangTB.TabIndex = 25;
+            this.hilangTB.ValueChanged += new System.EventHandler(this.hilangTB_ValueChanged);
+            // 
+            // rusakTB
+            // 
+            this.rusakTB.Location = new System.Drawing.Point(193, 517);
+            this.rusakTB.Name = "rusakTB";
+            this.rusakTB.ReadOnly = true;
+            this.rusakTB.Size = new System.Drawing.Size(171, 26);
+            this.rusakTB.TabIndex = 9;
+            this.rusakTB.ValueChanged += new System.EventHandler(this.rusakTB_ValueChanged);
             // 
             // tanggalPengadaan
             // 
@@ -313,16 +321,6 @@
             this.label14.TabIndex = 21;
             this.label14.Text = "LOKASI";
             // 
-            // hilangTB
-            // 
-            this.hilangTB.BackColor = System.Drawing.Color.LightCoral;
-            this.hilangTB.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.hilangTB.Location = new System.Drawing.Point(193, 687);
-            this.hilangTB.Name = "hilangTB";
-            this.hilangTB.Size = new System.Drawing.Size(171, 26);
-            this.hilangTB.TabIndex = 20;
-            this.hilangTB.Text = "0";
-            // 
             // dipinjamTB
             // 
             this.dipinjamTB.BackColor = System.Drawing.Color.LightBlue;
@@ -342,16 +340,6 @@
             this.jmlBukuTB.Name = "jmlBukuTB";
             this.jmlBukuTB.Size = new System.Drawing.Size(171, 26);
             this.jmlBukuTB.TabIndex = 18;
-            // 
-            // rusakTB
-            // 
-            this.rusakTB.BackColor = System.Drawing.Color.LightCoral;
-            this.rusakTB.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rusakTB.Location = new System.Drawing.Point(193, 517);
-            this.rusakTB.Name = "rusakTB";
-            this.rusakTB.Size = new System.Drawing.Size(171, 26);
-            this.rusakTB.TabIndex = 16;
-            this.rusakTB.Text = "0";
             // 
             // pengarangTB
             // 
@@ -485,12 +473,13 @@
             this.picture.BackgroundImage = global::Perputakaan.Properties.Resources.BookShelf_500px;
             this.picture.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.picture.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picture.Location = new System.Drawing.Point(128, 21);
+            this.picture.Location = new System.Drawing.Point(113, 8);
             this.picture.Name = "picture";
-            this.picture.Size = new System.Drawing.Size(142, 180);
+            this.picture.Size = new System.Drawing.Size(171, 202);
             this.picture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picture.TabIndex = 0;
             this.picture.TabStop = false;
+            this.picture.DoubleClick += new System.EventHandler(this.picture_DoubleClick);
             // 
             // buttonTambahKelola
             // 
@@ -617,9 +606,10 @@
             this.label13.AutoSize = true;
             this.label13.Location = new System.Drawing.Point(66, 41);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(442, 20);
+            this.label13.Size = new System.Drawing.Size(306, 20);
             this.label13.TabIndex = 2;
-            this.label13.Text = "MENCARI, MENGEDIT, MENAMBAH DAN MENGHAPUS BUKU";
+            this.label13.Text = "MENCARI, MENGEDIT, MENAMBAH BUKU";
+            this.label13.Click += new System.EventHandler(this.label13_Click);
             // 
             // label12
             // 
@@ -1409,7 +1399,7 @@
             this.MaximizeBox = false;
             this.Name = "home";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Form1";
+            this.Text = "OPENLIB APP";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.home_FormClosed);
             this.Load += new System.EventHandler(this.home_Load);
             this.tabControl1.ResumeLayout(false);
@@ -1417,6 +1407,8 @@
             this.DetailBuku.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.hilangTB)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rusakTB)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picture)).EndInit();
             this.DaftarBuku.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewBuku)).EndInit();
@@ -1466,10 +1458,8 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.TextBox lokasiTB;
         private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.TextBox hilangTB;
         private System.Windows.Forms.TextBox dipinjamTB;
         private System.Windows.Forms.TextBox jmlBukuTB;
-        private System.Windows.Forms.TextBox rusakTB;
         private System.Windows.Forms.TextBox pengarangTB;
         private System.Windows.Forms.TextBox penerbitTB;
         private System.Windows.Forms.TextBox judulTB;
@@ -1493,7 +1483,6 @@
         private System.Windows.Forms.DateTimePicker tanggalPengadaan;
         private System.Windows.Forms.DateTimePicker tahunTerbit;
         private System.Windows.Forms.Button buttonTambahKelola;
-        private System.Windows.Forms.Button addPic;
         private System.Windows.Forms.OpenFileDialog openPicture;
         private System.Windows.Forms.DataGridViewTextBoxColumn idbuku;
         private System.Windows.Forms.DataGridViewTextBoxColumn judulbuku;
@@ -1565,6 +1554,8 @@
         private System.Windows.Forms.TextBox idAnggotaTR;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.DataGridView dataGridViewPinjam;
+        private System.Windows.Forms.NumericUpDown rusakTB;
+        private System.Windows.Forms.NumericUpDown hilangTB;
     }
 }
 

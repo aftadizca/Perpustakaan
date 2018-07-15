@@ -138,6 +138,7 @@
     <Compile Include="TransaksiPrint.Designer.cs">
       <DependentUpon>TransaksiPrint.cs</DependentUpon>
     </Compile>
+    <Compile Include="UpdateStok.cs" />
     <Compile Include="user.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
